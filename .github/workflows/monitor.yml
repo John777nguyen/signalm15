@@ -4,11 +4,11 @@ permissions:
   contents: write
 
 on:
-  schedule:
-    # Chạy mỗi 10 phút (GitHub Actions không đảm bảo chính xác tuyệt đối,
-    # có thể trễ vài phút vào giờ cao điểm)
-    - cron: "*/10 * * * *"
-  workflow_dispatch: {}  # cho phép bấm nút "Run workflow" thủ công để test
+  workflow_dispatch: {}  # trigger bởi cron-job.org (POST tới /dispatches) hoặc bấm tay để test
+
+concurrency:
+  group: monitor-bbma-signal
+  cancel-in-progress: false
 
 jobs:
   check:
@@ -38,4 +38,3 @@ jobs:
           git add last_seen.json || true
           git diff --staged --quiet || git commit -m "update last seen message"
           git push || true
-
